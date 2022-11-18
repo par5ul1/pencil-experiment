@@ -1,0 +1,41 @@
+/* #waitingLobby {
+  display: none;
+} */
+
+#mainGame {
+  width: 100vw;
+  height: 100vh;
+  display: none;
+}
+
+.btn-crazy {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: red;
+    border: none;
+    border-radius: 50%;
+
+    width: 100px;
+    height: 100px;
+}
+
+.btn-start {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: gray;
+    color: black;
+    border: none;
+    border-radius: 10px;
+
+    width: 150px;
+    height: 100px;
+
+}

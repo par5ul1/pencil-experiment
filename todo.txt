@@ -1,0 +1,7 @@
+[x] Give away control
+[x] Show opponent score
+[] Timer
+[] End page?
+
+After Lavash
+[] Request the stupid control because somehow that's a new stupid feature
