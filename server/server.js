@@ -22,29 +22,30 @@ server.listen(port, ()=> {
 io.on('connection', (socket) => {
 
   socket.on('joinGame', (lobbyCode) => {
-    io.emit('setRoomNumber', lobbyCode);
-    io.emit('joinGame');
+    socket.join(lobbyCode);
+    io.sockets.in(lobbyCode).emit('setRoomNumber', lobbyCode);
+    io.sockets.in(lobbyCode).emit('joinGame');
   })
 
 	socket.on('startGame', (lobbyCode) => {
-    io.emit('startGame');
-    socket.broadcast.emit('disableControl');
+    io.sockets.in(lobbyCode).emit('startGame');
+    socket.broadcast.to(lobbyCode).emit('disableControl');
   })
 
   socket.on('startTimer', (lobbyCode, timer) => {
-    io.emit('startTimer', timer);
+    io.sockets.in(lobbyCode).emit('startTimer', timer);
   })
 
   socket.on('takeControl', (lobbyCode) => {
-    socket.broadcast.emit('disableControl');
+    socket.broadcast.to(lobbyCode).emit('disableControl');
   })
 
   socket.on('giveControl', (lobbyCode) => {
-    socket.broadcast.emit('takeControl');
+    socket.broadcast.to(lobbyCode).emit('takeControl');
   })
 
   socket.on('updateOpponentScore', (lobbyCode, opponentScore) => {
-    socket.broadcast.emit('updateOpponentScore', opponentScore);
+    socket.broadcast.to(lobbyCode).emit('updateOpponentScore', opponentScore);
   })
 
 });
