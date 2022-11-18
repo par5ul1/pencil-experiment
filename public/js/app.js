@@ -1,10 +1,5 @@
 let socket = io();
 
-const waitingLobby = document.getElementById('waitingLobby');
-const lobbyCode = document.getElementById('lobbyCode');
-const lobbyCodeInput = document.getElementById('lobbyCodeInput');
-const joinBtn = document.getElementById('joinButton');
-
 const mainGame = document.getElementById('mainGame');
 const playerScoreSpan = document.getElementById('playerScore');
 const opponentScoreSpan = document.getElementById('opponentScore');
@@ -14,8 +9,7 @@ const startBtn = document.getElementById('startButton');
 const crazyBtn = document.getElementById('crazyButton');
 const giveControlBtn = document.getElementById('giveControlButton');
 
-// Global
-var ROOM_NUM;
+const ROOM_ID = location.pathname;
 
 // Game Vars
 var score = 0;
@@ -23,18 +17,8 @@ var isControlling = false;
 const TIMER = 120;
 var timer = TIMER;
 
-socket.on('connect', () => {
-  lobbyCode.innerText = socket.id;
-});
-
-joinBtn.addEventListener('click', () => {
-  if (lobbyCodeInput.value !== '') {
-    socket.emit('joinGame', lobbyCodeInput.value);
-  }
-});
-
 startBtn.addEventListener('click', () => {
-  socket.emit('startGame', ROOM_NUM);
+  socket.emit('startGame', ROOM_ID);
 });
 
 crazyBtn.addEventListener('click', () => {
@@ -45,8 +29,8 @@ giveControlBtn.addEventListener('click', () => {
   giveControl();
 })
 
-socket.on('joinGame', () => {
-  hideLobby();
+socket.on("connect", () => {
+  socket.emit("joinRoom", ROOM_ID);
 });
 
 socket.on('startGame', () => {
@@ -69,15 +53,6 @@ socket.on('takeControl', () => {
   takeControl();
 });
 
-socket.on('setRoomNumber', (lobbyCode) => {
-  ROOM_NUM = lobbyCode;
-})
-
-function hideLobby() {
-  waitingLobby.style.display = "none";
-  mainGame.style.display = "block";
-}
-
 function disableControl() {
   isControlling = false;
 
@@ -95,7 +70,7 @@ function takeControl() {
 function giveControl() {
   disableControl();
 
-  socket.emit('giveControl', ROOM_NUM);
+  socket.emit('giveControl', ROOM_ID);
 }
 
 function updateOpponentScore(opponentScore) {
@@ -104,7 +79,7 @@ function updateOpponentScore(opponentScore) {
 
 function startGame() {
   setInterval(function() {
-    socket.emit('startTimer', ROOM_NUM, timer);
+    socket.emit('startTimer', ROOM_ID, timer);
     timer--;
   }, 1000);
 
@@ -126,13 +101,13 @@ function startTimer(currentTimer) {
 function crazyClicked() {
 
   if (!isControlling) {
-    socket.emit("takeControl", ROOM_NUM);
+    socket.emit("takeControl", ROOM_ID);
 
     takeControl();
   } else {
     score++;
 
-    socket.emit("updateOpponentScore", ROOM_NUM, score);
+    socket.emit("updateOpponentScore", ROOM_ID, score);
 
     playerScore.innerText = score;
 
@@ -141,8 +116,3 @@ function crazyClicked() {
     crazyBtn.style.animation = "none";
   }
 }
-
-// debug
-socket.on('testFn', () => {
-  alert("test");
-});

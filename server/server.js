@@ -11,41 +11,43 @@ let io = socket(server);
 
 app.use(express.static(publicPath));
 
+app.get('/:room', (req, res) => {
+  res.sendFile(path.join(__dirname+'/../public/index.html'));
+});
+
 server.listen(port, ()=> {
   console.log(`Server is up on port ${port}.`)
 });
 
 // TODO: Make it so broadcast only happen to room numbers.
-// io.emit is gonna be io.sockets.in(lobbyCode)
-// socket.broadcast.emit is gonna be socket.broadcast.to(lobbyCode).emit
+// io.emit is gonna be io.sockets.in(roomId)
+// socket.broadcast.emit is gonna be socket.to(roomId).broadcast.emit
 
 io.on('connection', (socket) => {
 
-  socket.on('joinGame', (lobbyCode) => {
-    socket.join(lobbyCode);
-    io.sockets.in(lobbyCode).emit('setRoomNumber', lobbyCode);
-    io.sockets.in(lobbyCode).emit('joinGame');
+  socket.on('joinRoom', (roomId) => {
+    socket.join(roomId)
   })
 
-	socket.on('startGame', (lobbyCode) => {
-    io.sockets.in(lobbyCode).emit('startGame');
-    socket.broadcast.to(lobbyCode).emit('disableControl');
+  socket.on('startGame', (roomId) => {
+    io.sockets.in(roomId).emit('startGame');
+    socket.broadcast.to(roomId).emit('disableControl');
   })
 
-  socket.on('startTimer', (lobbyCode, timer) => {
-    io.sockets.in(lobbyCode).emit('startTimer', timer);
+  socket.on('startTimer', (roomId, timer) => {
+    io.sockets.in(roomId).emit('startTimer', timer);
   })
 
-  socket.on('takeControl', (lobbyCode) => {
-    socket.broadcast.to(lobbyCode).emit('disableControl');
+  socket.on('takeControl', (roomId) => {
+    socket.broadcast.to(roomId).emit('disableControl');
   })
 
-  socket.on('giveControl', (lobbyCode) => {
-    socket.broadcast.to(lobbyCode).emit('takeControl');
+  socket.on('giveControl', (roomId) => {
+    socket.broadcast.to(roomId).emit('takeControl');
   })
 
-  socket.on('updateOpponentScore', (lobbyCode, opponentScore) => {
-    socket.broadcast.to(lobbyCode).emit('updateOpponentScore', opponentScore);
+  socket.on('updateOpponentScore', (roomId, opponentScore) => {
+    socket.broadcast.to(roomId).emit('updateOpponentScore', opponentScore);
   })
 
 });
