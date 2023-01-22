@@ -46,6 +46,10 @@ io.on('connection', (socket) => {
     socket.broadcast.to(roomId).emit('takeControl');
   })
 
+  socket.on('requestControl', (roomId) => {
+    socket.broadcast.to(roomId).emit('displayRequestControl');
+  })
+
   socket.on('updateOpponentScore', (roomId, opponentScore) => {
     socket.broadcast.to(roomId).emit('updateOpponentScore', opponentScore);
   })
