@@ -12,21 +12,40 @@ let io = socket(server);
 app.use(express.static(publicPath));
 
 app.get('/:room', (req, res) => {
-  res.sendFile(path.join(__dirname+'/../public/index.html'));
+  res.sendFile(path.join(__dirname + '/../public/index.html'));
 });
 
-server.listen(port, ()=> {
+server.listen(port, () => {
   console.log(`Server is up on port ${port}.`)
 });
 
-// TODO: Make it so broadcast only happen to room numbers.
-// io.emit is gonna be io.sockets.in(roomId)
-// socket.broadcast.emit is gonna be socket.to(roomId).broadcast.emit
-
+let rooms = {};
 io.on('connection', (socket) => {
 
   socket.on('joinRoom', (roomId) => {
-    socket.join(roomId)
+    socket.join(roomId);
+
+    if (!rooms[roomId]) {
+      rooms[roomId] = 0;
+    }
+    // Increment the number of clients in the room
+    rooms[roomId]++;
+    // check if there are exactly two clients in the room
+    if (rooms[roomId] === 2) {
+      io.sockets.in(roomId).emit('allowStart');
+    }
+  })
+
+  socket.on('disconnecting', () => {
+    // get the roomIds for this socket
+    let roomId = [...socket.rooms][1];
+    console.log(roomId);
+    // leave the room and update the number of clients
+    if (rooms[roomId]) {
+      rooms[roomId]--;
+    }
+    io.sockets.in(roomId).emit('revokeStart');
+    socket.leave(roomId);
   })
 
   socket.on('startGame', (roomId) => {

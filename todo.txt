@@ -13,5 +13,5 @@ After Lavash
 [x] Make text bigger?
 [x] Add completion text
 ?7. Record all actions and final scores with local time stamps from the timer and store it
-|8. Wait for both players to click start
-|9. Make sure there are exactly 2 people in the lobby before starting
+[x] Wait for both players to click start
+[x] Make sure there are exactly 2 people in the lobby before starting

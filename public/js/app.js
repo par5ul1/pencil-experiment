@@ -1,8 +1,10 @@
 let socket = io();
 
 const mainGame = document.getElementById('mainGame');
+const hud = document.getElementById('hud');
 const playerScoreSpan = document.getElementById('playerScore');
 const opponentScoreSpan = document.getElementById('opponentScore');
+const waitingMsg = document.getElementById('waitingMsg');
 const minutesSpan = document.getElementById('minutes');
 const secondsSpan = document.getElementById('seconds');
 const startBtn = document.getElementById('startButton');
@@ -20,7 +22,7 @@ const ROOM_ID = location.pathname;
 // Game Vars
 var score = 0;
 var isControlling = false;
-const TIMER = 5;
+const TIMER = 120;
 const COOLDOWN = 2;
 var cooldown = COOLDOWN;
 var timer = TIMER;
@@ -43,6 +45,16 @@ requestControlBtn.addEventListener('click', () => {
 
 socket.on("connect", () => {
   socket.emit("joinRoom", ROOM_ID);
+});
+
+socket.on("allowStart", () => {
+  waitingMsg.style.display = "none";
+  startBtn.style.display = "block";
+});
+
+socket.on("revokeStart", () => {
+  waitingMsg.style.display = "block";
+  startBtn.style.display = "none";
 });
 
 socket.on('startGame', () => {
@@ -121,6 +133,7 @@ function startGame() {
 
   isControlling = true;
 
+  hud.style.display = "block";
   startBtn.style.display = "none";
   crazyBtn.style.display = "block";
   giveControlBtn.style.display = "inline-block";

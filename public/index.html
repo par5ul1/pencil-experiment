@@ -8,14 +8,15 @@
 
 <body>
   <section id="mainGame">
-    <div style="margin-top: 5%;">
+    <div id="hud" style="margin-top: 5%; display: none;">
       <h1 style="font-size: 30px; margin-top: 0;"><span id="minutes">02</span>:<span id="seconds">00</span></h1>
       <p>Your Score: <span id="playerScore">0</span></p>
       <p>Opponent Score: <span id="opponentScore">0</span></p>
     </div>
+    <p id="waitingMsg">Waiting for your opponent to join...</p>
     <button type="button" id="crazyButton" class="btn-crazy">
     </button>
-    <button type="button" id="startButton" class="btn-start">Start
+    <button style="display: none;" type="button" id="startButton" class="btn-start">Start
     </button>
     <h1 style="display: none;" id="requestControlMessage">Your opponent is requesting control.</h1>
     <button style="display: none;" type="button" id="giveControlButton" class="btn-normal btn-give-control">Give Control
@@ -26,7 +27,7 @@
   <section id="endScreen" style="visibility: hidden;">
     <div style="text-align: center;">
       <h1 id="winStatus"></h1>
-      <p>Please enter your personal ID from the Qualtrics survey below to complete this part of the survey:</p>
+      <p>Please enter your Personal Qualtrics ID from the survey:</p>
       <div>
         <input type="text">
         <button type="submit">Done</button>

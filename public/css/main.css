@@ -112,6 +112,6 @@ h1 {
   font-size: 24px;
 }
 
-button {
+button, input {
   box-shadow: 10px 10px 78px -19px rgba(0,0,0,0.42);
 }
